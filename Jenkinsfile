@@ -23,7 +23,7 @@ node{
      }
    }
    stage('Run kubectl on Dev Server'){
-      sh 'kubectl create -f my-deployment.yaml .'
+      sh 'kubectl create -f my-deployment.yaml'
      sshagent(['dev-server']) {
        sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${dockerRun}"
      }
