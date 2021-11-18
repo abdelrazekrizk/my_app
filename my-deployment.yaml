@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  labels:
+   app: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  replicas: 4 # Update the replicas from 2 to 4
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web-app
+        image: abdelrazekrizk/my-app:1.0.0
+        ports:
+        - containerPort: 8080
