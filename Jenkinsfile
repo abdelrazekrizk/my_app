@@ -23,8 +23,15 @@ node{
      }
    }
    stage('Run kubectl on Dev Server'){
-     sh 'bash sudo chmod +x run_kubernete.sh'
-     def kubectlRun = 'bash . ./run_kubernete.sh'
+     def dOCKERPATH = 'docker.io/abdelrazekrizk/my-app:1.0.0'
+     sh "kubectl create deployment flaskprediction --image=$DOCKER_PATH --port=80"
+     sh "export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')"
+     sh 'echo Name of the Pod: $POD_NAME'
+     sh 'kubectl wait --for=condition=Ready pod/$POD_NAME --timeout=45s'
+     sh 'kubectl expose pod $POD_NAME --port=8000 --name=flaskapp'
+     sh "kubectl get pods --sort-by='.status.containerStatuses[0].restartCount'"
+     sh 'kubectl port-forward pod/$POD_NAME 8000:80'
+     sh 'kubectl logs pod/$POD_NAME'
      sshagent(['dev-server']) {
        sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${kubectlRun}"
      }   
