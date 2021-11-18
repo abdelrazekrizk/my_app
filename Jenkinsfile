@@ -12,7 +12,7 @@ node{
    }
    stage('Push Docker Image'){
      withCredentials([string(credentialsId: 'docker-pw', variable: 'dockerHubPwd')]) {
-        sh "docker login -u kammana -p ${dockerHubPwd}"
+        sh "docker login -u abdelrazekrizk -p ${dockerHubPwd}"
      }
      sh 'docker push kammana/my-app:2.0.0'
    }
