@@ -11,7 +11,7 @@ node{
      sh 'docker build -t abdelrazekrizk/my-app:2.0.0 .'
    }
    stage('Push Docker Image'){
-     withCredentials([string(credentialsId: 'docker-pwd', variable: 'dockerHubPwd')]) {
+     withCredentials([string(credentialsId: 'docker-pw', variable: 'dockerHubPwd')]) {
         sh "docker login -u kammana -p ${dockerHubPwd}"
      }
      sh 'docker push kammana/my-app:2.0.0'
