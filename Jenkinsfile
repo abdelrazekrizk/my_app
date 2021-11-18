@@ -23,7 +23,7 @@ node{
      }
    }
    stage('Run kubectl on Dev Server'){
-     sh 'bash chmod +x ./run_kubernete.sh .'
+     sh 'bash sudo chmod +x run_kubernete.sh'
      def kubectlRun = 'bash . ./run_kubernete.sh'
      sshagent(['dev-server']) {
        sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${kubectlRun}"
