@@ -1,3 +1,3 @@
-FROM tomcat:latest
-LABEL app=web-app
+FROM tomcat:8
+LABEL app=my-app
 COPY target/*.war /usr/local/tomcat/webapps/myweb.war
