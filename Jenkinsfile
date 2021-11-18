@@ -17,9 +17,16 @@ node{
      sh 'docker push abdelrazekrizk/my-app:3.0.0'
    }
    stage('Run Container on Dev Server'){
-     def dockerRun = 'docker run -p 9090:9090 -d --name my-app abdelrazekrizk/my-app:3.0.0'
+     def dockerRun = 'docker run -p 8080:8080 -d --name my-app abdelrazekrizk/my-app:3.0.0'
      sshagent(['dev-server']) {
        sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${dockerRun}"
      }
+   }
+   stage('Run kubectl on Dev Server'){
+     sh "chmod +x run_kubernete.sh"
+     def kubectlRun = '. run_kubernete.sh'
+     sshagent(['dev-server']) {
+       sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${kubectlRun}"
+     }   
    }
 }
