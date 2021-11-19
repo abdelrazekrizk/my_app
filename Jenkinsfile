@@ -23,14 +23,11 @@ node{
      }
    }
    stage ('Pusblish UT Reports'){
-    containerID = sh (
-        script: "docker run -d accountownerapp:B${BUILD_NUMBER}", 
-    returnStdout: true
-    ).trim()
-    echo "Container ID is ==> ${containerID}"
-    sh "docker cp ${containerID}:/TestResults/test_results.xml test_results.xml"
-    sh "docker stop ${containerID}"
-    sh "docker rm ${containerID}"
+    containerID = sh (script: "docker run -d abdelrazekrizk/my-app:1.0.0:B${BUILD_NUMBER}", returnStdout: true).trim()
+      echo "Container ID is ==> ${containerID}"
+      sh "docker cp ${containerID}:/TestResults/test_results.xml test_results.xml"
+      sh "docker stop ${containerID}"
+      sh "docker rm ${containerID}"
    }
    stage('Run kubectl on Dev Server'){
       sh 'kubectl create -f ./my-deployment.yaml'
