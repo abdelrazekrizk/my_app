@@ -22,6 +22,16 @@ node{
        sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${dockerRun}"
      }
    }
+   stage ('Pusblish UT Reports'){
+    containerID = sh (
+        script: "docker run -d accountownerapp:B${BUILD_NUMBER}", 
+    returnStdout: true
+    ).trim()
+    echo "Container ID is ==> ${containerID}"
+    sh "docker cp ${containerID}:/TestResults/test_results.xml test_results.xml"
+    sh "docker stop ${containerID}"
+    sh "docker rm ${containerID}"
+   }
    stage('Run kubectl on Dev Server'){
       sh 'kubectl create -f ./my-deployment.yaml'
      sshagent(['dev-server']) {
