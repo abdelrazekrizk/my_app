@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-service
+spec:
+  externalIPs:
+  - 3.232.171.178
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: highport
+    nodePort: 31903
+    port: 30102
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: web
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - ip: 3.232.171.178
