@@ -17,23 +17,20 @@ node{
      sh 'docker push abdelrazekrizk/my-app:1.0.0'
    }
    stage('Run Container on Dev Server'){
-     def dockerRun = 'docker run -p 8080:8080 -d --name my-app abdelrazekrizk/my-app:1.0.0'
+     def dockerRun = 'docker run -p 8080:8080 -d --name my-app abdelrazekrizk/my-app:1.0.0, returnStdout: true
+        ).trim()'
      sshagent(['dev-server']) {
        sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${dockerRun}"
+      def containerID = 'docker run -p 8080:8080 -d --name my-app abdelrazekrizk/my-app:1.0.0'
+       echo "Container ID is ==> ${containerID}"
+       sh "docker stop ${containerID}"
+       sh "docker rm ${containerID}"
      }
    }
    stage('Run kubectl on Dev Server'){
-     def dOCKERPATH = 'docker.io/abdelrazekrizk/my-app:1.0.0'
-     sh "kubectl create deployment my-app --image=$DOCKER_PATH --port=8080"
-     sh "export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')"
-     sh "echo Name of the Pod: $POD_NAME"
-     sh "kubectl wait --for=condition=Ready pod/$POD_NAME --timeout=45s"
-     sh "kubectl expose pod $POD_NAME --port=8000 --name=myapp"
-     sh "kubectl get pods --sort-by='.status.containerStatuses[0].restartCount'"
-     sh "kubectl port-forward pod/$POD_NAME 8000:8080"
-     sh "kubectl logs pod/$POD_NAME"
+      sh 'kubectl create -f ./my-deployment.yaml'
      sshagent(['dev-server']) {
-       sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${kubectlRun}"
-     }   
+       sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${dockerRun}"
+     }
    }
 }

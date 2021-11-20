@@ -17,12 +17,10 @@ node{
      sh 'docker push abdelrazekrizk/my-app:1.0.0'
    }
    stage('Run Container on Dev Server'){
-     def dockerRun = 'docker run -p 8080:8080 -d --name my-app abdelrazekrizk/my-app:1.0.0'
+     def dockerRun = 'docker run --rm -p 8080:8080 -d --name my-app abdelrazekrizk/my-app:1.0.0, returnStdout: true
+        ).trim()'
      sshagent(['dev-server']) {
        sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${dockerRun}"
-       echo "Container ID is ==> ${dockerRun}"
-       sh "docker stop ${dockerRun}"
-       sh "docker rm ${dockerRun}"
      }
    }
    stage('Run kubectl on Dev Server'){
