@@ -1,40 +1,40 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: helloworld
+  name: webapp
   labels:
-    app: helloworld
+    app: webapp
 spec:
   ports:
   - name: http
     port: 8000
-    targetPort: 8000
+    targetPort: 8080
   selector:
-    app: helloworld
+    app: webapp
   type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: helloworld
+  name: webapp
   labels:
-    app: helloworld
+    app: webapp
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: helloworld
+      app: webapp
   template:
     metadata:
       labels:
-        app: helloworld
+        app: webapp
     spec:
       containers:
-      - name: helloworld
+      - name: webapp
         image: abdelrazekrizk/my-app:1.0.0
         imagePullPolicy: IfNotPresent
         args:
         # Address for the app to listen on
-        - localhost:8000
+        - localhost:8080
         ports:
         - containerPort: 8000
