@@ -3,7 +3,7 @@ node{
        git credentialsId: 'git-creds', url: 'https://github.com/abdelrazekrizk/my_app'
    }
    stage('Mvn Package'){
-     def mvnHome = tool name: 'maven-3', type: 'maven'
+     def mvnHome = tool name: 'Maven', type: 'maven'
      def mvnCMD = "${mvnHome}/bin/mvn"
      sh "${mvnCMD} clean package"
    }
@@ -24,8 +24,5 @@ node{
    }
    stage('Run kubectl on Dev Server'){
       sh 'kubectl create -f ./deployment.yaml'
-     sshagent(['dev-server']) {
-       sh "ssh -o StrictHostKeyChecking=no ubuntu@172.31.80.219 ${dockerRun}"
      }
-   }
 }
